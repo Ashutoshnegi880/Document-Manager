@@ -8,7 +8,7 @@ export class AppController {
 
   @Get('aadhar')
   getAadharDocument(@Body() form: aadharId) {
-    // return this.appService.getAadharDocument(form);
+    return this.appService.getAadharDocument(form);
   }
 
   @Post('aadhar')

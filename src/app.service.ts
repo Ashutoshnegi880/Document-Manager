@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { aadharFormDto } from './dto/document.dto';
+import { aadharFormDto, aadharId } from './dto/document.dto';
 import { createWriteStream } from 'fs';
 import * as PDFDocument from 'pdfkit';
-import { PrismaService } from './prisma/aadhar-prisma.service';
-import {Prisma} from "@prisma/client"
+import { PrismaService } from './prisma/prisma.service';
+import { Prisma} from "@prisma/client"
+
 @Injectable()
 export class AppService {
   constructor(private prisma: PrismaService) {}
@@ -18,12 +19,26 @@ export class AppService {
       address: form.address,
       aadharNumber: form.aadharNumber
     }
+    const { aadharNumber } = form;
+
+  const existingAadharForm = await this.prisma.aadharForm.findUnique({
+    where: {
+      aadharNumber,
+    },
+  });
+
+  if (existingAadharForm) {
+    await this.prisma.aadharForm.update({
+      where: {
+        aadharNumber,
+      },
+      data: form,
+    });
+  } else {
     await this.prisma.aadharForm.create({
-      data: dbPayload,
-    })
-
-
-
+      data: form,
+    });
+  }
 
 
     return new Promise<string>((resolve, reject) => {
@@ -85,7 +100,10 @@ export class AppService {
     });
   }
 
-  // getAadharDocument(form: aadharId){
-
-  // }
+  getAadharDocument(form: aadharId){
+    const {aadharNumber} = form
+    return this.prisma.aadharForm.findUnique({
+      where :{aadharNumber}
+    })
+  }
 }
