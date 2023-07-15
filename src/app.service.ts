@@ -30,12 +30,6 @@ export class AppService {
 
     if (existingAadharForm) {
       return "Aadhar already exists"
-      // await this.prisma.aadharForm.update({
-      //   where: {
-      //     aadharNumber,
-      //   },
-      //   data: form,
-      // });
     } else {
       await this.prisma.aadharForm.create({
         data: form,
