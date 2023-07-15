@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { AppService } from './app.service';
 import { aadharFormDto, aadharId } from './dto/document.dto';
 
@@ -11,8 +11,13 @@ export class AppController {
     // return this.appService.getAadharDocument(form);
   }
 
-  @Post('aadhar')
+  @Post('aadhar/create')
   createAadharDocument(@Body() form: aadharFormDto){
     return this.appService.createAadharDocument(form)
+  }
+
+  @Put('aadhar/update')
+  updateAadharDocument(@Body() form: aadharFormDto){
+    return this.appService.updateAadharDocument(form)
   }
 }

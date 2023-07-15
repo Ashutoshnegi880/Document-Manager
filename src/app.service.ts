@@ -2,13 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { aadharFormDto } from './dto/document.dto';
 import { createWriteStream } from 'fs';
 import * as PDFDocument from 'pdfkit';
+<<<<<<< Updated upstream
 import { PrismaService } from './prisma/aadhar-prisma.service';
 import {Prisma} from "@prisma/client"
+=======
+import { PrismaService } from './prisma/prisma.service';
+import { Prisma } from "@prisma/client"
+
+>>>>>>> Stashed changes
 @Injectable()
 export class AppService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async createAadharDocument(form: aadharFormDto){
+  async createAadharDocument(form: aadharFormDto) {
 
     //Add data to Db
     const dbPayload: Prisma.AadharFormCreateInput = {
@@ -18,12 +24,36 @@ export class AppService {
       address: form.address,
       aadharNumber: form.aadharNumber
     }
+<<<<<<< Updated upstream
     await this.prisma.aadharForm.create({
       data: dbPayload,
     })
 
 
 
+=======
+    const { aadharNumber } = form;
+
+    const existingAadharForm = await this.prisma.aadharForm.findUnique({
+      where: {
+        aadharNumber,
+      },
+    });
+
+    if (existingAadharForm) {
+      return "Aadhar card already exist";
+      await this.prisma.aadharForm.update({
+        where: {
+          aadharNumber,
+        },
+        data: form,
+      });
+    } else {
+      await this.prisma.aadharForm.create({
+        data: form,
+      });
+    }
+>>>>>>> Stashed changes
 
 
     return new Promise<string>((resolve, reject) => {
@@ -50,11 +80,11 @@ export class AppService {
 
       // Add logos
       const logoPath = 'C:/Users/NEGI/vscode/document/src/images/aadhaar-card.png'; // Replace with the path to your logo image
-      doc.image(logoPath, 20, 20, { width: 510, height: 70});
+      doc.image(logoPath, 20, 20, { width: 510, height: 70 });
       // Add person image
       const personImagePath = 'C:/Users/NEGI/vscode/document/src/images/person_photo.png'; // Replace with the path to your person image
       doc.image(personImagePath, 20, 100, { width: 100, height: 120 });
-      
+
       doc.font('Helvetica-Bold').fontSize(14).text('Aadhaar Card', 150, 100);
       doc.font('Helvetica').fontSize(12).text('Name:', 150, 130).text(form.name, 280, 130);
       doc.font('Helvetica').fontSize(12).text('Aadhaar Number:', 150, 150).text(form.aadharNumber, 280, 150);
@@ -67,10 +97,10 @@ export class AppService {
       // Add more fields as needed
 
       const lineY = height - 30; // 10 points above the bottom
-      doc.moveTo(10, lineY).lineTo(width-10, lineY).strokeColor('red').stroke();
-      
+      doc.moveTo(10, lineY).lineTo(width - 10, lineY).strokeColor('red').stroke();
+
       // Finalize the PDF document
-      
+
       doc.end();
 
       // Handle the completion event
@@ -85,7 +115,44 @@ export class AppService {
     });
   }
 
+<<<<<<< Updated upstream
   // getAadharDocument(form: aadharId){
 
   // }
+=======
+  getAadharDocument(form: aadharId) {
+    const { aadharNumber } = form
+    return this.prisma.aadharForm.findUnique({
+      where: { aadharNumber }
+    })
+  }
+
+  async updateAadharDocument(form: aadharFormDto) {
+    const dbPayload: Prisma.AadharFormCreateInput = {
+      name: form.name,
+      gender: form.gender,
+      dob: form.dob,
+      address: form.address,
+      aadharNumber: form.aadharNumber
+    }
+    const { aadharNumber } = form;
+
+    const existingAadharForm = await this.prisma.aadharForm.findUnique({
+      where: {
+        aadharNumber,
+      },
+    });
+
+    if (existingAadharForm) {
+      return await this.prisma.aadharForm.update({
+        where: {
+          aadharNumber,
+        },
+        data: form,
+      });
+    } else {
+      return "Aadhar card noes not exist";
+    }
+  }
+>>>>>>> Stashed changes
 }
