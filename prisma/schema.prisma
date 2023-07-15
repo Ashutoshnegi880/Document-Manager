@@ -20,7 +20,6 @@ model AadharForm {
   @@map("Aadhar")
 }
 
-
 type aadharId{
 aadharNumber String
 }

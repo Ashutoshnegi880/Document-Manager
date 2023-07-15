@@ -1,15 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { aadharFormDto } from './dto/document.dto';
+import { aadharFormDto, aadharId } from './dto/document.dto';
 import { createWriteStream } from 'fs';
 import * as PDFDocument from 'pdfkit';
-<<<<<<< Updated upstream
-import { PrismaService } from './prisma/aadhar-prisma.service';
-import {Prisma} from "@prisma/client"
-=======
 import { PrismaService } from './prisma/prisma.service';
-import { Prisma } from "@prisma/client"
+import { Prisma} from "@prisma/client"
 
->>>>>>> Stashed changes
 @Injectable()
 export class AppService {
   constructor(private prisma: PrismaService) { }
@@ -24,36 +19,30 @@ export class AppService {
       address: form.address,
       aadharNumber: form.aadharNumber
     }
-<<<<<<< Updated upstream
     await this.prisma.aadharForm.create({
       data: dbPayload,
     })
 
-
-
-=======
     const { aadharNumber } = form;
 
-    const existingAadharForm = await this.prisma.aadharForm.findUnique({
+  const existingAadharForm = await this.prisma.aadharForm.findUnique({
+    where: {
+      aadharNumber,
+    },
+  });
+
+  if (existingAadharForm) {
+    await this.prisma.aadharForm.update({
       where: {
         aadharNumber,
       },
+      data: form,
     });
-
-    if (existingAadharForm) {
-      return "Aadhar card already exist";
-      await this.prisma.aadharForm.update({
-        where: {
-          aadharNumber,
-        },
-        data: form,
-      });
-    } else {
-      await this.prisma.aadharForm.create({
-        data: form,
-      });
-    }
->>>>>>> Stashed changes
+  } else {
+    await this.prisma.aadharForm.create({
+      data: form,
+    });
+  }
 
 
     return new Promise<string>((resolve, reject) => {
@@ -115,11 +104,6 @@ export class AppService {
     });
   }
 
-<<<<<<< Updated upstream
-  // getAadharDocument(form: aadharId){
-
-  // }
-=======
   getAadharDocument(form: aadharId) {
     const { aadharNumber } = form
     return this.prisma.aadharForm.findUnique({
@@ -154,5 +138,4 @@ export class AppService {
       return "Aadhar card noes not exist";
     }
   }
->>>>>>> Stashed changes
 }
