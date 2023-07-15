@@ -15,7 +15,7 @@ model AadharForm {
   gender      String
   dob         String
   address     String
-  aadharNumber String    @unique
+  aadharNumber String    @unique 
 
   @@map("Aadhar")
 }
@@ -23,4 +23,3 @@ model AadharForm {
 type aadharId{
 aadharNumber String
 }
-
