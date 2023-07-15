@@ -3,7 +3,7 @@ import { aadharFormDto, aadharId } from './dto/document.dto';
 import { createWriteStream } from 'fs';
 import * as PDFDocument from 'pdfkit';
 import { PrismaService } from './prisma/prisma.service';
-import { Prisma} from "@prisma/client"
+import { Prisma } from "@prisma/client"
 
 @Injectable()
 export class AppService {
@@ -19,30 +19,28 @@ export class AppService {
       address: form.address,
       aadharNumber: form.aadharNumber
     }
-    await this.prisma.aadharForm.create({
-      data: dbPayload,
-    })
 
     const { aadharNumber } = form;
 
-  const existingAadharForm = await this.prisma.aadharForm.findUnique({
-    where: {
-      aadharNumber,
-    },
-  });
-
-  if (existingAadharForm) {
-    await this.prisma.aadharForm.update({
+    const existingAadharForm = await this.prisma.aadharForm.findUnique({
       where: {
         aadharNumber,
       },
-      data: form,
     });
-  } else {
-    await this.prisma.aadharForm.create({
-      data: form,
-    });
-  }
+
+    if (existingAadharForm) {
+      return "Aadhar already exists"
+      // await this.prisma.aadharForm.update({
+      //   where: {
+      //     aadharNumber,
+      //   },
+      //   data: form,
+      // });
+    } else {
+      await this.prisma.aadharForm.create({
+        data: form,
+      });
+    }
 
 
     return new Promise<string>((resolve, reject) => {
