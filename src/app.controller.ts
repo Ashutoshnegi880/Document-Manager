@@ -18,6 +18,6 @@ export class AppController {
 
   @Put('aadhar/update')
   updateAadharDocument(@Body() form: aadharFormDto){
-    return this.appService.updateAadharDocument(form)
+    return this.appService.updateAadharDocument(form) 
   }
 }
